@@ -1,6 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "project1.h"
+#include <string.h>
+
+typedef struct {
+    int length;
+    int height;
+} Dimensions;
+
+typedef struct  {
+    int num_channels; // this defines how many colors in the image, 1 for grayscale, 3 RGB, 4 RGBA
+} channels;
+
+typedef struct {
+    Dimensions size;
+    channels color_info;
+    float **data; // points to pixel data
+} imagematrix; 
 
 imagematrix *creatematrix(int length, int height, int num_channels) {
     imagematrix *img = (imagematrix *)malloc(sizeof(imagematrix));
@@ -37,6 +52,7 @@ imagematrix *creatematrix(int length, int height, int num_channels) {
 
 void free_image(imagematrix *img) {
     if (!img) return;
+
     for (int i = 0; i < img->size.height; i++) {
         free(img->data[i]);
     }
@@ -44,17 +60,23 @@ void free_image(imagematrix *img) {
     free(img);
 }
 
-static int is_dimensions_match(imagematrix *img1, imagematrix *img2) {
-    return (img1->size.length == img2->size.length &&
-            img1->size.height == img2->size.height &&
-            img1->color_info.num_channels == img2->color_info.num_channels);
-}
-
-imagematrix *add_matrices(imagematrix *img1, imagematrix *img2) {
-    if (!is_dimensions_match(img1, img2)) {
-        printf("Error: image matrices do not match for addition.\n");
+imagematrix *checkDimensions(imagematrix *img1, imagematrix *img2) {
+    if (img1->size.length != img2->size.length || 
+        img1->size.height != img2->size.height || 
+        img1->color_info.num_channels != img2->color_info.num_channels) {
+        printf("Error: image matrices do not match for addition or subtraction.\n");
         return NULL;
     }
+
+    imagematrix *result = creatematrix(img1->size.length, img1->size.height, img1->color_info.num_channels);
+    if (!result) return NULL;
+
+    return result;
+}
+
+// Addition
+imagematrix *add_matrices(imagematrix *img1, imagematrix *img2) {
+    if (!checkDimensions(img1, img2)) return NULL;
 
     imagematrix *result = creatematrix(img1->size.length, img1->size.height, img1->color_info.num_channels);
     if (!result) return NULL;
@@ -67,11 +89,9 @@ imagematrix *add_matrices(imagematrix *img1, imagematrix *img2) {
     return result;
 }
 
+// Subtraction
 imagematrix *subtract_matrices(imagematrix *img1, imagematrix *img2) {
-    if (!is_dimensions_match(img1, img2)) {
-        printf("Error: image matrices do not match for subtraction.\n");
-        return NULL;
-    }
+    if (!checkDimensions(img1, img2)) return NULL;
 
     imagematrix *result = creatematrix(img1->size.length, img1->size.height, img1->color_info.num_channels);
     if (!result) return NULL;
@@ -81,9 +101,11 @@ imagematrix *subtract_matrices(imagematrix *img1, imagematrix *img2) {
             result->data[i][j] = img1->data[i][j] - img2->data[i][j];
         }
     }
+
     return result;
 }
 
+// Scaling
 imagematrix *scale_matrix(imagematrix *img, float scalar) {
     if (!img) {
         printf("Error: image is NULL\n");
@@ -101,6 +123,7 @@ imagematrix *scale_matrix(imagematrix *img, float scalar) {
     return result;
 }
 
+// Multiplication
 imagematrix *multiplymatrices(imagematrix *img1, imagematrix *img2) {
     if (img1->color_info.num_channels != 1 || img2->color_info.num_channels != 1) {
         printf("Error: Matrix multiplication is only supported for grayscale images.\n");
@@ -123,5 +146,6 @@ imagematrix *multiplymatrices(imagematrix *img1, imagematrix *img2) {
             }
         }
     }
+
     return result;
 }
