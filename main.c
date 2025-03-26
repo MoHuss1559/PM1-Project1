@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "project1.h"
+#include "project1.c"  // Includes function definitions directly
 
 // Fill an image matrix with a specific value for all pixels
 void fill_image(imagematrix *img, float value) {
