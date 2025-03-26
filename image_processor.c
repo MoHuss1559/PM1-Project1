@@ -170,7 +170,7 @@ int main() {
     int operation;
     float scalar;
 
-    printf("🖼️  Image Matrix Operations\n");
+    printf("Image Matrix Operations\n");
     printf("---------------------------\n");
     printf("Choose an operation:\n");
     printf("1 - Add Images\n");
