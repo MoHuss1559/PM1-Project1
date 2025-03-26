@@ -196,8 +196,8 @@ int main() {
         free_image(img1);
 
     } else if (operation == 4) {
-        img1 = creatematrix(2, 3, 1);
-        img2 = creatematrix(3, 2, 1);
+        img1 = creatematrix(3, 1, 1);
+        img2 = creatematrix(2, 3, 1);
         fill_image(img1, 1.0);
         fill_image(img2, 2.0);
 
