@@ -1,6 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include "project1.c"  // You can switch to project1.h if modularized later
+#include "project1.h"
 
 // Fill an image matrix with a specific value for all pixels
 void fill_image(imagematrix *img, float value) {
@@ -28,7 +27,6 @@ int main() {
     imagematrix *img1, *img2, *result;
 
     if (operation == 3) {
-        // Scale one RGB image
         img1 = creatematrix(3, 3, 3);
         fill_image(img1, 100.0);
         printf("Enter scalar value to scale the image: ");
@@ -42,7 +40,6 @@ int main() {
         free_image(img1);
 
     } else if (operation == 4) {
-        // Multiply grayscale matrices
         img1 = creatematrix(2, 3, 1);
         img2 = creatematrix(3, 2, 1);
         fill_image(img1, 1.0);
@@ -57,7 +54,6 @@ int main() {
         free_image(img2);
 
     } else if (operation == 1 || operation == 2) {
-        // Add or subtract two RGB images
         img1 = creatematrix(3, 3, 3);
         img2 = creatematrix(3, 3, 3);
         fill_image(img1, 100.0);
